@@ -1,6 +1,4 @@
-﻿using System.Net.Mime;
-using System.Runtime.CompilerServices;
-using DryIoc;
+﻿using DryIoc;
 using InventoryManagementSystem.Extensions;
 using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Services;
@@ -12,10 +10,6 @@ namespace InventoryManagementSystem
     {
         private static async Task Main(string[] args)
         {
-            Console.Title = "Inventory Management System";
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.ForegroundColor = ConsoleColor.White;
-
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             ConfigureContainer();
@@ -29,10 +23,9 @@ namespace InventoryManagementSystem
 
         private static void ConfigureContainer()
         {
-            Container.Register<IUserInterface, ConsoleInterface>();
-            Container.Register<IInventoryManagementService, InventoryManagementService>();
-            Container.Register<IPersistService, PersistService>();
-
+            Container.Register<IUserInterface, ConsoleInterface>(Reuse.Singleton);
+            Container.Register<IInventoryManagementService, InventoryManagementService>(Reuse.Singleton);
+            Container.Register<IPersistService, PersistService>(Reuse.Singleton);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -46,7 +39,7 @@ namespace InventoryManagementSystem
             sender.Error("Unhandled exception");
         }
 
-        private static CancellationTokenSource _keepAliveCts = new();
+        private static readonly CancellationTokenSource _keepAliveCts = new();
 
         private static async Task KeepAlive()
         {
