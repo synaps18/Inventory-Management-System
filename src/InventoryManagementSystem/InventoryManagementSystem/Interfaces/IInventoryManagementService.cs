@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Models;
+﻿using System.Collections.Immutable;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Interfaces;
 
@@ -39,4 +40,6 @@ public interface IInventoryManagementService
     /// Value of whole inventory
     /// </summary>
     public float ValueOfInventory { get; }
+
+    public ImmutableList<Product> Products { get; }
 }

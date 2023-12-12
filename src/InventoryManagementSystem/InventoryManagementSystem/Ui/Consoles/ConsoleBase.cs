@@ -73,4 +73,31 @@ public abstract class ConsoleBase
 
         ConsoleFactory.GetConsole<IMainMenuConsole>().Load();
     }
+
+    protected bool UserInputYesOrNo()
+    {
+        if (!TryWaitForKeyInput(out var enteredKey, new List<ConsoleKey>()
+            {
+                ConsoleKey.Y,
+                ConsoleKey.N
+            }))
+        {
+            Console.WriteLine("Tried too many times... Leaving");
+            return false;
+        };
+
+        if (enteredKey == ConsoleKey.N)
+        {
+            Console.WriteLine("Ok!");
+            return false;
+        }
+
+        if (enteredKey != ConsoleKey.Y)
+        {
+            Console.WriteLine("Entered invalid key. Leaving...");
+            return false;
+        }
+
+        return true;
+    }
 }

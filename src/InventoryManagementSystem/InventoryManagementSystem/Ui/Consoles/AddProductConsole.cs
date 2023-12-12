@@ -26,11 +26,17 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
         var productName = GetUserInput("Choose a name:", "Entered name was empty! Please choose a name:", 2);
 
         Console.WriteLine();
+
         var productPriceText = string.Empty;
         var productPrice = 0f;
 
+        var calledMoreThaOnce = false;
         do
         {
+            if (calledMoreThaOnce)
+                Console.WriteLine("Invalid Format! Please use only numbers in format like [3.42] without currency symbols!");
+            calledMoreThaOnce = true;
+            
             productPriceText = GetUserInput("How much is the fish?", "Entered price was empty! Please give me a value:", 2);
         } while (!float.TryParse(productPriceText, NumberStyles.Any, CultureInfo.InvariantCulture, out productPrice));
 

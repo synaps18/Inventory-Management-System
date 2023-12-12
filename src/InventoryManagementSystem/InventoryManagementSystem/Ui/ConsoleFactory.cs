@@ -16,6 +16,7 @@ public class ConsoleFactory : IConsoleFactory
         container.Register<IAddProductConsole, AddProductConsole>();
         container.Register<IUpdateProductConsole, UpdateProductConsole>();
         container.Register<IRemoveProductConsole, RemoveProductConsole>();
+        container.Register<IListAllProductsConsole, ListAllProductsConsole>();
         container.Register<ICountOfProductsConsole, CountOfProductsConsole>();
         container.Register<IValueOfInventoryConsole, ValueOfInventoryConsole>();
     }

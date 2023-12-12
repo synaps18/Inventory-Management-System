@@ -25,10 +25,12 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
         _mainMenuActions.Add(ConsoleKey.NumPad2, ConsoleFactory.GetConsole<IUpdateProductConsole>);
         _mainMenuActions.Add(ConsoleKey.D3, ConsoleFactory.GetConsole<IRemoveProductConsole>);
         _mainMenuActions.Add(ConsoleKey.NumPad3, ConsoleFactory.GetConsole<IRemoveProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.D4, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad4, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.D5, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad5, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
+        _mainMenuActions.Add(ConsoleKey.D4, ConsoleFactory.GetConsole<IListAllProductsConsole>);
+        _mainMenuActions.Add(ConsoleKey.NumPad4, ConsoleFactory.GetConsole<IListAllProductsConsole>);
+        _mainMenuActions.Add(ConsoleKey.D5, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
+        _mainMenuActions.Add(ConsoleKey.NumPad5, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
+        _mainMenuActions.Add(ConsoleKey.D6, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
+        _mainMenuActions.Add(ConsoleKey.NumPad6, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
     }
 
     private void MainMenu()
@@ -40,8 +42,9 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
         Console.WriteLine("1: Add a product");
         Console.WriteLine("2: Update a product");
         Console.WriteLine("3: Remove a product");
-        Console.WriteLine("4: Count of products");
-        Console.WriteLine("5: Value of inventory");
+        Console.WriteLine("4: List all products");
+        Console.WriteLine("5: Count of products");
+        Console.WriteLine("6: Value of inventory");
         Console.WriteLine();
         Console.Write("Key: ");
 

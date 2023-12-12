@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Exceptions;
+﻿using System.Collections.Immutable;
+using InventoryManagementSystem.Exceptions;
 using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Models;
 
@@ -58,6 +59,7 @@ public class InventoryManagementService : IInventoryManagementService
     {
         var productAdded = _products.Add(new Product()
         {
+            Id = _products.Max(a => a.Id) + 1,
             Name = name, 
             Price = price
         });
@@ -81,8 +83,6 @@ public class InventoryManagementService : IInventoryManagementService
         {
             throw new ProductNotFoundException(id);
         }
-
-
     }
 
     ///<inheritdoc />
@@ -90,4 +90,6 @@ public class InventoryManagementService : IInventoryManagementService
 
     ///<inheritdoc />
     public float ValueOfInventory => _products.Sum(p => p.Price);
+
+    public ImmutableList<Product> Products => _products.ToImmutableList();
 }

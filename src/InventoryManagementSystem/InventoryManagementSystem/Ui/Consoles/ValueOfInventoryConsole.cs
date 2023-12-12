@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Interfaces;
+﻿using DryIoc.ImTools;
+using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
@@ -19,7 +20,7 @@ public class ValueOfInventoryConsole : ConsoleBase, IValueOfInventoryConsole
     {
         base.Load();
 
-        Console.WriteLine($"Value of inventory: {_inventoryManagementService.ValueOfInventory}");
+        Console.WriteLine($"Value of inventory: {_inventoryManagementService.ValueOfInventory:N2} €");
         
         ReturnToMainMenu();
     }
