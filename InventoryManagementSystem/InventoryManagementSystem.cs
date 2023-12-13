@@ -64,7 +64,7 @@ internal class InventoryManagementSystem
 
         ConfigureContainer();
 
-        Container.Resolve<IUserInterface>();
+        var userInterface = Container.Resolve<IUserInterface>();
 
         await KeepAlive();
     }

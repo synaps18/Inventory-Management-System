@@ -8,7 +8,7 @@ public class Product
     /// <summary>
     /// Empty Product
     /// </summary>
-    public static Product Empty = new ()
+    public static Product Empty = new()
     {
         Id = -1,
         Name = string.Empty,

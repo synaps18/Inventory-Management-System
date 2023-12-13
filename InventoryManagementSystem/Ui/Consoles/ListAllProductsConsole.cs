@@ -20,8 +20,7 @@ public class ListAllProductsConsole : ConsoleBase, IListAllProductsConsole
     {
         base.Load();
         _inventoryManagementService.Products.ForEach(p => Console.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
-        
+
         ReturnToMainMenu();
     }
-
 }

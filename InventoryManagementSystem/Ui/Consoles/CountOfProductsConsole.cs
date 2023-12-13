@@ -9,9 +9,9 @@ public class CountOfProductsConsole : ConsoleBase, ICountOfProductsConsole
     private readonly IInventoryManagementService _inventoryManagementService;
 
     public CountOfProductsConsole(
-        IConsoleFactory consoleFactory, 
+        IConsoleFactory consoleFactory,
         IInventoryManagementService inventoryManagementService
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         _inventoryManagementService = inventoryManagementService;
     }
@@ -22,7 +22,7 @@ public class CountOfProductsConsole : ConsoleBase, ICountOfProductsConsole
         base.Load();
 
         Console.WriteLine($"Count of products: {_inventoryManagementService.Count}");
-        
+
         ReturnToMainMenu();
     }
 }

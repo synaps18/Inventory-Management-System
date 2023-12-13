@@ -67,7 +67,7 @@ public abstract class ConsoleBase : IConsoleBase
         while (string.IsNullOrEmpty(userInput))
         {
             Console.WriteLine(errorMessage);
-            
+
             if (retry <= 1)
             {
                 return string.Empty;
@@ -106,7 +106,9 @@ public abstract class ConsoleBase : IConsoleBase
         {
             Console.WriteLine("Tried too many times... Leaving");
             return false;
-        };
+        }
+
+        ;
 
         if (enteredKey == ConsoleKey.N)
         {

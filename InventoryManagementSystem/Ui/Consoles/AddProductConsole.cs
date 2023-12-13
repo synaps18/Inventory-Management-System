@@ -10,9 +10,9 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
     private readonly IInventoryManagementService _inventoryManagementService;
 
     public AddProductConsole(
-        IConsoleFactory consoleFactory, 
+        IConsoleFactory consoleFactory,
         IInventoryManagementService inventoryManagementService
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         _inventoryManagementService = inventoryManagementService;
     }
@@ -21,7 +21,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
     public override void Load()
     {
         base.Load();
-        
+
         Console.WriteLine("Ok! Let's add a new product");
 
         Console.WriteLine();
@@ -38,7 +38,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
             if (calledMoreThaOnce)
                 Console.WriteLine("Invalid Format! Please use only numbers in format like [3.42] without currency symbols!");
             calledMoreThaOnce = true;
-            
+
             productPriceText = GetUserInput("How much is the fish?", "Entered price was empty! Please give me a value:", 2);
         } while (!float.TryParse(productPriceText, NumberStyles.Any, CultureInfo.InvariantCulture, out productPrice));
 

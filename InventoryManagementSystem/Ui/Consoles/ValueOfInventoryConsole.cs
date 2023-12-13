@@ -10,9 +10,9 @@ public class ValueOfInventoryConsole : ConsoleBase, IValueOfInventoryConsole
     private readonly IInventoryManagementService _inventoryManagementService;
 
     public ValueOfInventoryConsole(
-        IConsoleFactory consoleFactory, 
+        IConsoleFactory consoleFactory,
         IInventoryManagementService inventoryManagementService
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         _inventoryManagementService = inventoryManagementService;
     }
@@ -23,7 +23,7 @@ public class ValueOfInventoryConsole : ConsoleBase, IValueOfInventoryConsole
         base.Load();
 
         Console.WriteLine($"Value of inventory: {_inventoryManagementService.ValueOfInventory:N2} €");
-        
+
         ReturnToMainMenu();
     }
 }

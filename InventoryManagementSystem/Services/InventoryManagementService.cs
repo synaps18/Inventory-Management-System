@@ -11,13 +11,14 @@ public class InventoryManagementService : IInventoryManagementService
     private readonly HashSet<Product> _products = new();
     private readonly IPersistService _persistService;
 
-    public InventoryManagementService(IPersistService persistService)
+    public InventoryManagementService(
+        IPersistService persistService)
     {
         _persistService = persistService;
 
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_OnProcessExit;
 
-        RestoreProducts();
+        Restore();
     }
 
     ///<inheritdoc />
@@ -34,7 +35,7 @@ public class InventoryManagementService : IInventoryManagementService
     {
         var productAdded = _products.Add(new Product
         {
-            Id = _products.Max(a => a.Id) + 1,
+            Id = _products.Count > 0 ? _products.Max(a => a.Id) + 1 : 0,
             Name = name,
             Price = price
         });
@@ -72,19 +73,24 @@ public class InventoryManagementService : IInventoryManagementService
     }
 
     /// <summary>
-    /// Persist all products on application exit
+    ///     Persist all products on application exit
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void CurrentDomain_OnProcessExit(object? sender, EventArgs e)
     {
+        Persist();
+    }
+
+    private void Persist()
+    {
         _persistService.Persist(_products.ToList());
     }
 
     /// <summary>
-    /// Restores all products persisted by <see cref="IPersistService" />
+    ///     Restores all products persisted by <see cref="IPersistService" />
     /// </summary>
-    private void RestoreProducts()
+    private void Restore()
     {
         var restoredProducts = _persistService.Restore();
         restoredProducts.ForEach(p => _products.Add(p));

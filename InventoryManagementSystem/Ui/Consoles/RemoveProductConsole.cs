@@ -11,7 +11,7 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
     public RemoveProductConsole(
         IConsoleFactory consoleFactory,
         IInventoryManagementService inventoryManagementService
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         _inventoryManagementService = inventoryManagementService;
     }
@@ -72,7 +72,9 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
             Console.WriteLine($"Failed to remove product with id [{productId}]!");
             Restart();
             return;
-        };
+        }
+
+        ;
 
         Console.WriteLine($"Successfully removed product with id [{productId}]");
 

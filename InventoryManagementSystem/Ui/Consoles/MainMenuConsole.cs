@@ -11,7 +11,7 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
 
     public MainMenuConsole(
         IConsoleFactory consoleFactory
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         InitializeMainMenu();
     }

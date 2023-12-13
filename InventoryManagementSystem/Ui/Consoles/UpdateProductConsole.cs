@@ -9,9 +9,9 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
     private readonly IInventoryManagementService _inventoryManagementService;
 
     public UpdateProductConsole(
-        IConsoleFactory consoleFactory, 
+        IConsoleFactory consoleFactory,
         IInventoryManagementService inventoryManagementService
-        ) : base(consoleFactory)
+    ) : base(consoleFactory)
     {
         _inventoryManagementService = inventoryManagementService;
     }
@@ -43,7 +43,7 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
         } while (!int.TryParse(idText, out productId));
 
 
-        if(!_inventoryManagementService.TryGetProduct(productId, out var product))
+        if (!_inventoryManagementService.TryGetProduct(productId, out var product))
         {
             Console.WriteLine("Product could not be found! Please try again...");
             Restart();
