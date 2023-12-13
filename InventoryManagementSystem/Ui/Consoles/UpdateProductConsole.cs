@@ -3,6 +3,7 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
+/// <inheritdoc cref="IUpdateProductConsole"/>
 public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
 {
     private readonly IInventoryManagementService _inventoryManagementService;
@@ -15,6 +16,7 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
         _inventoryManagementService = inventoryManagementService;
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();
@@ -86,6 +88,9 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
         ReturnToMainMenu();
     }
 
+    /// <summary>
+    /// Restarts this console user interface
+    /// </summary>
     private void Restart()
     {
         Console.WriteLine("Press any key...");

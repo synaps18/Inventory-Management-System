@@ -4,6 +4,7 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui;
 
+/// <inheritdoc />
 public class ConsoleFactory : IConsoleFactory
 {
     private readonly IContainer _container;
@@ -21,7 +22,8 @@ public class ConsoleFactory : IConsoleFactory
         container.Register<IValueOfInventoryConsole, ValueOfInventoryConsole>();
     }
 
-    public TInterface GetConsole<TInterface>() where TInterface : class
+    /// <inheritdoc />
+    public TInterface GetConsole<TInterface>() where TInterface : class, IConsoleBase
     {
         var console = _container.Resolve<TInterface>();
         return console;

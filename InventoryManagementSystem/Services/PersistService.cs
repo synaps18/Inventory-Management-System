@@ -22,9 +22,9 @@ public class PersistService : IPersistService
     {
         try
         {
-            if (!File.Exists(Filename)) 
+            if (!File.Exists(Filename))
                 return new List<Product>();
-        
+
             var serializedData = File.ReadAllText(Filename);
             var products = JsonSerializer.Deserialize<List<Product>>(serializedData);
             return products ?? new List<Product>();

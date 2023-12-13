@@ -3,7 +3,8 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
-public abstract class ConsoleBase
+/// <inheritdoc />
+public abstract class ConsoleBase : IConsoleBase
 {
     protected readonly IConsoleFactory ConsoleFactory;
 
@@ -12,6 +13,7 @@ public abstract class ConsoleBase
         ConsoleFactory = consoleFactory;
     }
 
+    /// <inheritdoc />
     public virtual void Load()
     {
         this.Info($"Console [{this.GetType().Name}] loaded");
@@ -19,7 +21,13 @@ public abstract class ConsoleBase
         Console.Clear();
     }
 
-
+    /// <summary>
+    /// Try to wait for a specific key input of the user
+    /// </summary>
+    /// <param name="validKey"> The valid key that was entered </param>
+    /// <param name="validKeys"> List of possible valid keys </param>
+    /// <param name="retries"> Times to retry waiting in case that the give key is invalid </param>
+    /// <returns> User entered a valid key or not </returns>
     protected bool TryWaitForKeyInput(out ConsoleKey validKey, List<ConsoleKey> validKeys, int retries = 5)
     {
         var keyInfo = Console.ReadKey();
@@ -44,6 +52,13 @@ public abstract class ConsoleBase
         return true;
     }
 
+    /// <summary>
+    /// Gets text input of the user
+    /// </summary>
+    /// <param name="message"> Request message for user </param>
+    /// <param name="errorMessage"> Error message if no retries left </param>
+    /// <param name="retry"> Times to retry the request </param>
+    /// <returns> Given user input </returns>
     protected string GetUserInput(string message, string errorMessage, int retry = 2)
     {
         Console.WriteLine(message);
@@ -51,13 +66,13 @@ public abstract class ConsoleBase
 
         while (string.IsNullOrEmpty(userInput))
         {
+            Console.WriteLine(errorMessage);
+            
             if (retry <= 1)
             {
-                Console.WriteLine(errorMessage);
                 return string.Empty;
             }
 
-            Console.WriteLine(errorMessage);
             userInput = Console.ReadLine();
 
             retry--;
@@ -66,6 +81,9 @@ public abstract class ConsoleBase
         return userInput;
     }
 
+    /// <summary>
+    /// Returns to the main menu
+    /// </summary>
     protected void ReturnToMainMenu()
     {
         Console.WriteLine("Press any key to continue...");
@@ -74,6 +92,10 @@ public abstract class ConsoleBase
         ConsoleFactory.GetConsole<IMainMenuConsole>().Load();
     }
 
+    /// <summary>
+    /// Gets yes or no (y / n) from user and validates it
+    /// </summary>
+    /// <returns> Yes: <b>true</b> No or invalid: <b>false</b></returns>
     protected bool UserInputYesOrNo()
     {
         if (!TryWaitForKeyInput(out var enteredKey, new List<ConsoleKey>()

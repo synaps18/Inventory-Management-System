@@ -8,9 +8,8 @@ namespace InventoryManagementSystem.Services;
 ///<inheritdoc />
 public class InventoryManagementService : IInventoryManagementService
 {
-    private readonly IPersistService _persistService;
-
     private readonly HashSet<Product> _products = new();
+    private readonly IPersistService _persistService;
 
     public InventoryManagementService(IPersistService persistService)
     {
@@ -21,23 +20,33 @@ public class InventoryManagementService : IInventoryManagementService
         RestoreProducts();
     }
 
-    /// <summary>
-    /// Restores all products persisted by <see cref="IPersistService"/>
-    /// </summary>
-    private void RestoreProducts()
+    ///<inheritdoc />
+    public float ValueOfInventory => _products.Sum(p => p.Price);
+
+    ///<inheritdoc />
+    public ImmutableList<Product> Products => _products.ToImmutableList();
+
+    ///<inheritdoc />
+    public int Count => _products.Count;
+
+    ///<inheritdoc />
+    public bool AddProduct(string name, float price)
     {
-        var restoredProducts = _persistService.Restore();
-        restoredProducts.ForEach(p => _products.Add(p));
+        var productAdded = _products.Add(new Product
+        {
+            Id = _products.Max(a => a.Id) + 1,
+            Name = name,
+            Price = price
+        });
+
+        return productAdded;
     }
 
-    /// <summary>
-    /// Persist all products on application exit
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void CurrentDomain_OnProcessExit(object? sender, EventArgs e)
+    ///<inheritdoc />
+    public bool RemoveProduct(int id)
     {
-        _persistService.Persist(_products.ToList());
+        var productRemoved = _products.RemoveWhere(p => p.Id == id);
+        return productRemoved > 0;
     }
 
     ///<inheritdoc />
@@ -54,42 +63,30 @@ public class InventoryManagementService : IInventoryManagementService
         return false;
     }
 
-    ///<inheritdoc />
-    public bool AddProduct(string name, float price)
-    {
-        var productAdded = _products.Add(new Product()
-        {
-            Id = _products.Max(a => a.Id) + 1,
-            Name = name, 
-            Price = price
-        });
-
-        return productAdded;
-    }
-
-    ///<inheritdoc />
-    public bool RemoveProduct(int id)
-    {
-        var productRemoved = _products.RemoveWhere(p => p.Id == id);
-        return productRemoved > 0;
-    }
-
-    ///<inheritdoc />
+    /// <inheritdoc />
     /// <exception cref="ProductNotFoundException"> Throws if the product was not found </exception>
     public void UpdateProduct(int id, string name, float price)
     {
         var productFromInventory = _products.FirstOrDefault(p => p.Id == id);
-        if (productFromInventory == null)
-        {
-            throw new ProductNotFoundException(id);
-        }
+        if (productFromInventory == null) throw new ProductNotFoundException(id);
     }
 
-    ///<inheritdoc />
-    public int Count => _products.Count;
+    /// <summary>
+    /// Persist all products on application exit
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void CurrentDomain_OnProcessExit(object? sender, EventArgs e)
+    {
+        _persistService.Persist(_products.ToList());
+    }
 
-    ///<inheritdoc />
-    public float ValueOfInventory => _products.Sum(p => p.Price);
-
-    public ImmutableList<Product> Products => _products.ToImmutableList();
+    /// <summary>
+    /// Restores all products persisted by <see cref="IPersistService" />
+    /// </summary>
+    private void RestoreProducts()
+    {
+        var restoredProducts = _persistService.Restore();
+        restoredProducts.ForEach(p => _products.Add(p));
+    }
 }

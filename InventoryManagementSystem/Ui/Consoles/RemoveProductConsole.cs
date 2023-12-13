@@ -3,6 +3,7 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
+/// <inheritdoc cref="IRemoveProductConsole"/>
 public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
 {
     private readonly IInventoryManagementService _inventoryManagementService;
@@ -15,6 +16,7 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
         _inventoryManagementService = inventoryManagementService;
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();
@@ -77,6 +79,9 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
         ReturnToMainMenu();
     }
 
+    /// <summary>
+    /// Restarts this console user interface
+    /// </summary>
     private void Restart()
     {
         Console.WriteLine("Press any key...");

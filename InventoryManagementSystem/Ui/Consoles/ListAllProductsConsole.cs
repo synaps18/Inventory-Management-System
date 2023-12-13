@@ -3,6 +3,7 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
+/// <inheritdoc cref="IListAllProductsConsole"/>
 public class ListAllProductsConsole : ConsoleBase, IListAllProductsConsole
 {
     private readonly IInventoryManagementService _inventoryManagementService;
@@ -14,6 +15,7 @@ public class ListAllProductsConsole : ConsoleBase, IListAllProductsConsole
         _inventoryManagementService = inventoryManagementService;
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();

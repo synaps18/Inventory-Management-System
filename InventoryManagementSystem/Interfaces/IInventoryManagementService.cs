@@ -41,5 +41,8 @@ public interface IInventoryManagementService
     /// </summary>
     public float ValueOfInventory { get; }
 
+    /// <summary>
+    /// All products
+    /// </summary>
     public ImmutableList<Product> Products { get; }
 }

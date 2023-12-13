@@ -5,6 +5,9 @@
 /// </summary>
 public class Product
 {
+    /// <summary>
+    /// Empty Product
+    /// </summary>
     public static Product Empty = new ()
     {
         Id = -1,

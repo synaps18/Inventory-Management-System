@@ -4,6 +4,7 @@ using InventoryManagementSystem.Ui.Interfaces;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
+/// <inheritdoc cref="IMainMenuConsole"/>
 public class MainMenuConsole : ConsoleBase, IMainMenuConsole
 {
     private readonly Dictionary<ConsoleKey, Func<IConsoleBase>> _mainMenuActions = new();
@@ -15,6 +16,9 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
         InitializeMainMenu();
     }
 
+    /// <summary>
+    /// Initializes the main menu
+    /// </summary>
     private void InitializeMainMenu()
     {
         _mainMenuActions.Clear();
@@ -33,6 +37,9 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
         _mainMenuActions.Add(ConsoleKey.NumPad6, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
     }
 
+    /// <summary>
+    /// Printout the maine menu and asks user for next action
+    /// </summary>
     private void MainMenu()
     {
         Console.WriteLine("Welcome to the Inventory Management System");
@@ -76,6 +83,7 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
         console.Load();
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         base.Load();
