@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Interfaces;
+using InventoryManagementSystem.Models;
 using InventoryManagementSystem.Ui.Interfaces;
 using PPlus;
 using PPlus.Controls;
@@ -31,71 +32,156 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
 
         PromptPlus.WriteLine();
 
+        if (!AskForProductToUpdate(out var productId))
+        {
+            ReturnToMainMenu();
+            return;
+        }
+
+        if (!GetProduct(productId, out var product))
+        {
+            Restart();
+            return;
+        }
+
+        if (!EnsureThatTheProductIsChosenOne(product!))
+        {
+            Restart();
+            return;
+        }
+
+        if (AskForName(out var productName))
+        {
+            product!.Name = productName;
+        }
+
+        if(AskForPrize(out var price))
+        {
+            product!.Price = price;
+        }
+
+        ReturnToMainMenu();
+    }
+
+    /// <summary>
+    /// Asks user for id of the product that should be changed
+    /// </summary>
+    /// <param name="id"> Id of product </param>
+    /// <returns> User input successfull or not </returns>
+    private bool AskForProductToUpdate(out int id)
+    {
         var productIdText = PromptPlus.Input("Which product should be updated?")
             .MaxLength(5)
             .AddValidators(PromptValidators.IsNumber())
             .Run();
 
-        var productId = Convert.ToInt32(productIdText);
-
-        if (!_inventoryManagementService.TryGetProduct(productId, out var product))
+        if (productIdText.IsAborted)
         {
-            PromptPlus.WriteLine("Product could not be found! Please try again...");
-            Restart();
-            return;
+            id = 0;
+            return false; 
+        }
+        
+        id = Convert.ToInt32(productIdText.Value);
+        return true;
+    }
+
+    /// <summary>
+    /// Get's the real product from inventory service
+    /// </summary>
+    /// <param name="id"> Id of product </param>
+    /// <param name="product"> The product </param>
+    /// <returns> Process successfull </returns>
+    private bool GetProduct(int id, out Product? product)
+    {
+        if (!_inventoryManagementService.TryGetProduct(id, out var productFromManagement))
+        {
+            PromptPlus.WriteLine("Product not found!");
+            product = null;
+            return false;
         }
 
-        if (product == null)
+        if (productFromManagement == null)
         {
-            PromptPlus.WriteLine("Product could not be found! Please try again...");
-            Restart();
-            return;
+            PromptPlus.WriteLine("Product is null");
+            product = null;
+            return false;
         }
 
+        product = productFromManagement;
+        return true;
+    }
 
+    /// <summary>
+    /// Ensures that the chosen product is the correct one
+    /// </summary>
+    /// <param name="product"> Product that should be changed</param>
+    /// <returns> User input was successfull or not </returns>
+    private bool EnsureThatTheProductIsChosenOne(Product product)
+    {
         //To be sure, ask 
         var resultRealyWantToUpdate = PromptPlus.Confirm("Just to be sure... Is this the product you want to update?"
-                                        + Environment.NewLine
-                                        + $"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €").Run();
+                                                         + Environment.NewLine
+                                                         + $"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €").Run();
 
-        if (resultRealyWantToUpdate.IsAborted)
-        {
-            Restart();
-            return;
-        }
+        return !(resultRealyWantToUpdate.IsAborted || resultRealyWantToUpdate.Value.Key == ConsoleKey.N);     
+    }
 
-
-        //Ask for Name
+    /// <summary>
+    /// Asks for a new name
+    /// </summary>
+    /// <param name="name"> New name </param>
+    /// <returns> User input was successfull or not </returns>
+    private bool AskForName(out string name)
+    {
         var resultChangeTheName = PromptPlus.Confirm("Want to change the name?").Run();
-        if (!resultChangeTheName.IsAborted)
+        if (resultChangeTheName.IsAborted || resultChangeTheName.Value.Key == ConsoleKey.N)
         {
-            var newProductName = PromptPlus.Input("Name: ")
-                .MaxLength(10)
-                .Run();
-
-            if (!newProductName.IsAborted)
-            {
-                product.Name = newProductName.Value;
-            }
+            name = string.Empty;
+            return false;
         }
 
+        var newProductName = PromptPlus.Input("Name: ")
+            .MaxLength(10)
+            .DefaultIfEmpty("No name")
+            .Run();
 
-        //Ask for Prize
+        if (newProductName.IsAborted)
+        {
+            name = string.Empty;
+            return false;
+        }
+
+        name = newProductName.Value;
+        return true;
+    }
+
+    /// <summary>
+    /// Asks user for the price
+    /// </summary>
+    /// <param name="price"> The new price </param>
+    /// <returns> User input was successfull or not </returns>
+    private bool AskForPrize(out float price)
+    {
         var resultChangeThePrize = PromptPlus.Confirm("Want to change the prize?").Run();
-        if (!resultChangeThePrize.IsAborted)
+        if (resultChangeThePrize.IsAborted || resultChangeThePrize.Value.Key == ConsoleKey.N)
         {
-            var newProductName = PromptPlus.Input("Prize: ")
-                .MaxLength(10)
-                .AddValidators(PromptValidators.IsTypeFloat())
-                .Run();
-
-            if (!newProductName.IsAborted)
-            {
-                product.Price = Convert.ToSingle(newProductName.Value);
-            }
+            price = 0.0f;
+            return false;
         }
 
-        ReturnToMainMenu();
+        var newProductName = PromptPlus.Input("Prize: ")
+            .MaxLength(10)
+            .AddValidators(PromptValidators.IsTypeFloat())
+            .Run();
+
+        if (newProductName.IsAborted)
+        {
+            price = 0.0f;
+            return false;
+        }
+
+        price = Convert.ToSingle(newProductName.Value);
+        return true;
     }
 
     /// <summary>

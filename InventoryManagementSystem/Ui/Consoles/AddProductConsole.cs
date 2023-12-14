@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using InventoryManagementSystem.Interfaces;
+﻿using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
 using PPlus;
+using PPlus.Controls;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -24,24 +24,19 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
         base.Load();
 
         PromptPlus.WriteLine("Ok! Let's add a new product");
-
-        PromptPlus.WriteLine();
-        var productName = GetUserInput("Choose a name:", "Entered name was empty! Please choose a name:", 2);
-
         PromptPlus.WriteLine();
 
-        var productPriceText = string.Empty;
-        var productPrice = 0f;
-
-        var calledMoreThaOnce = false;
-        do
+        if (!AskForName(out var productName))
         {
-            if (calledMoreThaOnce)
-                PromptPlus.WriteLine("Invalid Format! Please use only numbers in format like [3.42] without currency symbols!");
-            calledMoreThaOnce = true;
+            ReturnToMainMenu();
+            return;
+        }
 
-            productPriceText = GetUserInput("How much is the fish?", "Entered price was empty! Please give me a value:", 2);
-        } while (!float.TryParse(productPriceText, NumberStyles.Any, CultureInfo.InvariantCulture, out productPrice));
+        if (!AskForPrice(out var productPrice))
+        {
+            ReturnToMainMenu();
+            return;
+        }
 
         var productAdded = _inventoryManagementService.AddProduct(productName!, productPrice);
 
@@ -49,5 +44,51 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
         PromptPlus.WriteLine(userInfo);
 
         ReturnToMainMenu();
+    }
+
+    /// <summary>
+    /// Asks the user for a name
+    /// </summary>
+    /// <param name="name"> Entered name </param>
+    /// <returns> User input was successfull or not </returns>
+    private bool AskForName(out string name)
+    {
+        //Ask for Name
+        var productNameText = PromptPlus.Input("Choose a name")
+            .MaxLength(10)
+            .DefaultIfEmpty("No name")
+            .Run();
+
+        if (productNameText.IsAborted)
+        {
+            name = string.Empty;
+            return false;
+        }
+
+        name = productNameText.Value;
+        return true;
+    }
+
+    /// <summary>
+    /// Asks the user for a price
+    /// </summary>
+    /// <param name="prize"> The entered price </param>
+    /// <returns> User input was successfull or not </returns>
+    private bool AskForPrice(out float prize)
+    {
+        //Ask for Price
+        var productPrizeText = PromptPlus.Input("How much is the fish?")
+            .MaxLength(10)
+            .AddValidators(PromptValidators.IsTypeFloat())
+            .Run();
+
+        if (productPrizeText.IsAborted)
+        {
+            prize = 0.0f;
+            return false;
+        }
+
+        prize = Convert.ToSingle(productPrizeText.Value);
+        return true;
     }
 }

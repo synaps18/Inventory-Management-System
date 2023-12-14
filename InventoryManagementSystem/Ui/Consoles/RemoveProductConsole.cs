@@ -56,7 +56,7 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
                                         + Environment.NewLine
                                         + $"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €").Run();
         
-        if (result.IsAborted)
+        if (result.IsAborted || result.Value.Key == ConsoleKey.N)
         {
             Restart();
             return;
