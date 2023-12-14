@@ -1,5 +1,7 @@
 ﻿using InventoryManagementSystem.Extensions;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
+using IConsoleBase = InventoryManagementSystem.Ui.Interfaces.IConsoleBase;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -18,7 +20,7 @@ public abstract class ConsoleBase : IConsoleBase
     {
         this.Info($"Console [{this.GetType().Name}] loaded");
 
-        Console.Clear();
+        PromptPlus.Clear();
     }
 
     /// <summary>
@@ -30,21 +32,21 @@ public abstract class ConsoleBase : IConsoleBase
     /// <returns> User entered a valid key or not </returns>
     protected bool TryWaitForKeyInput(out ConsoleKey validKey, List<ConsoleKey> validKeys, int retries = 5)
     {
-        var keyInfo = Console.ReadKey();
+        var keyInfo = PromptPlus.ReadKey();
 
         while (validKeys.All(k => k != keyInfo.Key))
         {
             if (retries <= 1)
             {
-                Console.WriteLine("Retries exceeded... ");
+                PromptPlus.WriteLine("Retries exceeded... ");
                 validKey = default;
                 return false;
             }
 
-            Console.WriteLine("Invalid key! Possible Keys are: " + string.Join(", ", validKeys));
-            Console.WriteLine("Please enter a valid key");
+            PromptPlus.WriteLine("Invalid key! Possible Keys are: " + string.Join(", ", validKeys));
+            PromptPlus.WriteLine("Please enter a valid key");
 
-            keyInfo = Console.ReadKey();
+            keyInfo = PromptPlus.ReadKey();
             retries--;
         }
 
@@ -61,19 +63,19 @@ public abstract class ConsoleBase : IConsoleBase
     /// <returns> Given user input </returns>
     protected string GetUserInput(string message, string errorMessage, int retry = 2)
     {
-        Console.WriteLine(message);
-        var userInput = Console.ReadLine();
+        PromptPlus.WriteLine(message);
+        var userInput = PromptPlus.ReadLine();
 
         while (string.IsNullOrEmpty(userInput))
         {
-            Console.WriteLine(errorMessage);
+            PromptPlus.WriteLine(errorMessage);
 
             if (retry <= 1)
             {
                 return string.Empty;
             }
 
-            userInput = Console.ReadLine();
+            userInput = PromptPlus.ReadLine();
 
             retry--;
         }
@@ -86,8 +88,8 @@ public abstract class ConsoleBase : IConsoleBase
     /// </summary>
     protected void ReturnToMainMenu()
     {
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadKey();
+        PromptPlus.WriteLine("Press any key to continue...");
+        PromptPlus.ReadKey();
 
         ConsoleFactory.GetConsole<IMainMenuConsole>().Load();
     }
@@ -104,7 +106,7 @@ public abstract class ConsoleBase : IConsoleBase
                 ConsoleKey.N
             }))
         {
-            Console.WriteLine("Tried too many times... Leaving");
+            PromptPlus.WriteLine("Tried too many times... Leaving");
             return false;
         }
 
@@ -112,13 +114,13 @@ public abstract class ConsoleBase : IConsoleBase
 
         if (enteredKey == ConsoleKey.N)
         {
-            Console.WriteLine("Ok!");
+            PromptPlus.WriteLine("Ok!");
             return false;
         }
 
         if (enteredKey != ConsoleKey.Y)
         {
-            Console.WriteLine("Entered invalid key. Leaving...");
+            PromptPlus.WriteLine("Entered invalid key. Leaving...");
             return false;
         }
 

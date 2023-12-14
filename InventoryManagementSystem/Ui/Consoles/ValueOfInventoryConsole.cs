@@ -1,6 +1,7 @@
 ﻿using DryIoc.ImTools;
 using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -22,7 +23,7 @@ public class ValueOfInventoryConsole : ConsoleBase, IValueOfInventoryConsole
     {
         base.Load();
 
-        Console.WriteLine($"Value of inventory: {_inventoryManagementService.ValueOfInventory:N2} €");
+        PromptPlus.WriteLine($"Value of inventory: {_inventoryManagementService.ValueOfInventory:N2} €");
 
         ReturnToMainMenu();
     }

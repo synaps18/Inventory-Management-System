@@ -2,6 +2,7 @@
 using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Consoles;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
 
 namespace InventoryManagementSystem.Ui;
 
@@ -14,9 +15,11 @@ public class ConsoleInterface : IUserInterface
         IContainer container)
     {
         Console.Title = "Inventory Management System";
-        Console.BackgroundColor = ConsoleColor.Blue;
-        Console.ForegroundColor = ConsoleColor.White;
         Console.CancelKeyPress += ConsoleOn_CancelKeyPress;
+
+        PromptPlus.BackgroundColor = ConsoleColor.Blue;
+        PromptPlus.ForegroundColor = ConsoleColor.White;
+        
 
         container.Register<IConsoleFactory, ConsoleFactory>(Reuse.Singleton);
         _consoleFactory = container.Resolve<IConsoleFactory>();

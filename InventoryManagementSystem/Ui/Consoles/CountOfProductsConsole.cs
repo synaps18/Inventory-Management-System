@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -21,7 +22,7 @@ public class CountOfProductsConsole : ConsoleBase, ICountOfProductsConsole
     {
         base.Load();
 
-        Console.WriteLine($"Count of products: {_inventoryManagementService.Count}");
+        PromptPlus.WriteLine($"Count of products: {_inventoryManagementService.Count}");
 
         ReturnToMainMenu();
     }

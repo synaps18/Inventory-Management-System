@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -19,7 +20,7 @@ public class ListAllProductsConsole : ConsoleBase, IListAllProductsConsole
     public override void Load()
     {
         base.Load();
-        _inventoryManagementService.Products.ForEach(p => Console.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
+        _inventoryManagementService.Products.ForEach(p => PromptPlus.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
 
         ReturnToMainMenu();
     }

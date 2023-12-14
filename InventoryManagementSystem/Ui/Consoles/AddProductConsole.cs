@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -22,12 +23,12 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
     {
         base.Load();
 
-        Console.WriteLine("Ok! Let's add a new product");
+        PromptPlus.WriteLine("Ok! Let's add a new product");
 
-        Console.WriteLine();
+        PromptPlus.WriteLine();
         var productName = GetUserInput("Choose a name:", "Entered name was empty! Please choose a name:", 2);
 
-        Console.WriteLine();
+        PromptPlus.WriteLine();
 
         var productPriceText = string.Empty;
         var productPrice = 0f;
@@ -36,7 +37,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
         do
         {
             if (calledMoreThaOnce)
-                Console.WriteLine("Invalid Format! Please use only numbers in format like [3.42] without currency symbols!");
+                PromptPlus.WriteLine("Invalid Format! Please use only numbers in format like [3.42] without currency symbols!");
             calledMoreThaOnce = true;
 
             productPriceText = GetUserInput("How much is the fish?", "Entered price was empty! Please give me a value:", 2);
@@ -45,7 +46,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
         var productAdded = _inventoryManagementService.AddProduct(productName!, productPrice);
 
         var userInfo = productAdded ? "Alright! Product added" : "Adding the product was not successfull";
-        Console.WriteLine(userInfo);
+        PromptPlus.WriteLine(userInfo);
 
         ReturnToMainMenu();
     }

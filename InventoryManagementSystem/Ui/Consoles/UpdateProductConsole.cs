@@ -1,5 +1,7 @@
 ﻿using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
+using PPlus.Controls;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -21,69 +23,77 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
     {
         base.Load();
 
-        Console.WriteLine("Ok, let's update a product!");
-        Console.WriteLine("Here's a list of products, have an eye on the ID number");
-        Console.WriteLine();
+        PromptPlus.WriteLine("Ok, let's update a product!");
+        PromptPlus.WriteLine("Here's a list of products, have an eye on the ID number");
+        PromptPlus.WriteLine();
 
-        _inventoryManagementService.Products.ForEach(p => Console.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
+        _inventoryManagementService.Products.ForEach(p => PromptPlus.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
 
-        Console.WriteLine();
+        PromptPlus.WriteLine();
 
-        var idText = string.Empty;
-        var productId = -1;
+        var productIdText = PromptPlus.Input("Which product should be updated?")
+            .MaxLength(5)
+            .AddValidators(PromptValidators.IsNumber())
+            .Run();
 
-        var calledMoreThaOnce = false;
-        do
-        {
-            if (calledMoreThaOnce)
-                Console.WriteLine("Invalid Format! Please use only numbers without any special characters!");
-            calledMoreThaOnce = true;
-
-            idText = GetUserInput("Which product should be updated?", "ID was empty");
-        } while (!int.TryParse(idText, out productId));
-
+        var productId = Convert.ToInt32(productIdText);
 
         if (!_inventoryManagementService.TryGetProduct(productId, out var product))
         {
-            Console.WriteLine("Product could not be found! Please try again...");
+            PromptPlus.WriteLine("Product could not be found! Please try again...");
             Restart();
             return;
         }
 
         if (product == null)
         {
-            Console.WriteLine("Product could not be found! Please try again...");
+            PromptPlus.WriteLine("Product could not be found! Please try again...");
             Restart();
             return;
         }
 
-        Console.WriteLine("Just to be sure... Is this the product you want to update? (y / n)");
-        Console.WriteLine($"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €");
 
-        var changeTheProduct = UserInputYesOrNo();
-        if (!changeTheProduct)
+        //To be sure, ask 
+        var resultRealyWantToUpdate = PromptPlus.Confirm("Just to be sure... Is this the product you want to update?"
+                                        + Environment.NewLine
+                                        + $"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €").Run();
+
+        if (resultRealyWantToUpdate.IsAborted)
         {
             Restart();
             return;
         }
 
-        var changeTheName = UserInputYesOrNo();
-        if (!changeTheName)
+
+        //Ask for Name
+        var resultChangeTheName = PromptPlus.Confirm("Want to change the name?").Run();
+        if (!resultChangeTheName.IsAborted)
         {
-            Restart();
-            return;
+            var newProductName = PromptPlus.Input("Name: ")
+                .MaxLength(10)
+                .Run();
+
+            if (!newProductName.IsAborted)
+            {
+                product.Name = newProductName.Value;
+            }
         }
 
-        //TODO HIER ABFRAGEN WIE DER NAME SEIN SOLL
 
-        var changeThePrize = UserInputYesOrNo();
-        if (!changeThePrize)
+        //Ask for Prize
+        var resultChangeThePrize = PromptPlus.Confirm("Want to change the prize?").Run();
+        if (!resultChangeThePrize.IsAborted)
         {
-            Restart();
-            return;
-        }
+            var newProductName = PromptPlus.Input("Prize: ")
+                .MaxLength(10)
+                .AddValidators(PromptValidators.IsTypeFloat())
+                .Run();
 
-        //TODO HIER ABFRAGEN WIE DER PREIS SEIN SOLL
+            if (!newProductName.IsAborted)
+            {
+                product.Price = Convert.ToSingle(newProductName.Value);
+            }
+        }
 
         ReturnToMainMenu();
     }
@@ -93,8 +103,8 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
     /// </summary>
     private void Restart()
     {
-        Console.WriteLine("Press any key...");
-        Console.ReadKey();
+        PromptPlus.WriteLine("Press any key...");
+        PromptPlus.ReadKey();
         ConsoleFactory.GetConsole<IUpdateProductConsole>().Load();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using InventoryManagementSystem.Interfaces;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
+using PPlus.Controls;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -21,47 +23,40 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
     {
         base.Load();
 
-        Console.WriteLine("Ok, let's remove a product!");
-        Console.WriteLine("Here's a list of products, have an eye on the ID number");
-        Console.WriteLine();
+        PromptPlus.WriteLine("Ok, let's remove a product!");
+        PromptPlus.WriteLine("Here's a list of products, have an eye on the ID number");
+        PromptPlus.WriteLine();
 
-        _inventoryManagementService.Products.ForEach(p => Console.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
+        _inventoryManagementService.Products.ForEach(p => PromptPlus.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
 
-        Console.WriteLine();
+        PromptPlus.WriteLine();
 
-        var idText = string.Empty;
-        var productId = -1;
+        var productIdText = PromptPlus.Input("Which product should be removed?")
+            .MaxLength(5)
+            .AddValidators(PromptValidators.IsNumber())
+            .Run();
 
-        var calledMoreThaOnce = false;
-        do
-        {
-            if (calledMoreThaOnce)
-                Console.WriteLine("Invalid Format! Please use only numbers without any special characters!");
-            calledMoreThaOnce = true;
-
-            idText = GetUserInput("Which product should be removed?", "ID was empty");
-        } while (!int.TryParse(idText, out productId));
-
+        var productId = Convert.ToInt32(productIdText);
 
         if (!_inventoryManagementService.TryGetProduct(productId, out var product))
         {
-            Console.WriteLine("Product could not be found! Please try again...");
+            PromptPlus.WriteLine("Product could not be found! Please try again...");
             Restart();
             return;
         }
 
         if (product == null)
         {
-            Console.WriteLine("Product could not be found! Please try again...");
+            PromptPlus.WriteLine("Product could not be found! Please try again...");
             Restart();
             return;
         }
 
-        Console.WriteLine("Just to be sure... Is this the product you want to remove? (y / n)");
-        Console.WriteLine($"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €");
-
-        var changeTheProduct = UserInputYesOrNo();
-        if (!changeTheProduct)
+        var result = PromptPlus.Confirm("Just to be sure... Is this the product you want to remove?" 
+                                        + Environment.NewLine
+                                        + $"Id: {product.Id} \t Name: {product.Name} \t Price: {product.Price.ToString("N2")} €").Run();
+        
+        if (result.IsAborted)
         {
             Restart();
             return;
@@ -69,14 +64,14 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
 
         if (!_inventoryManagementService.RemoveProduct(productId))
         {
-            Console.WriteLine($"Failed to remove product with id [{productId}]!");
+            PromptPlus.WriteLine($"Failed to remove product with id [{productId}]!");
             Restart();
             return;
         }
 
         ;
 
-        Console.WriteLine($"Successfully removed product with id [{productId}]");
+        PromptPlus.WriteLine($"Successfully removed product with id [{productId}]");
 
         ReturnToMainMenu();
     }
@@ -86,8 +81,8 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
     /// </summary>
     private void Restart()
     {
-        Console.WriteLine("Press any key...");
-        Console.ReadKey();
+        PromptPlus.WriteLine("Press any key...");
+        PromptPlus.ReadKey();
         ConsoleFactory.GetConsole<IRemoveProductConsole>().Load();
     }
 }

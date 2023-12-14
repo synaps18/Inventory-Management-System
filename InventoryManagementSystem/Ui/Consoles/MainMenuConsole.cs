@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.Tracing;
 using InventoryManagementSystem.Extensions;
 using InventoryManagementSystem.Ui.Interfaces;
+using PPlus;
+using IConsoleBase = InventoryManagementSystem.Ui.Interfaces.IConsoleBase;
 
 namespace InventoryManagementSystem.Ui.Consoles;
 
@@ -42,18 +44,18 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
     /// </summary>
     private void MainMenu()
     {
-        Console.WriteLine("Welcome to the Inventory Management System");
-        Console.WriteLine();
-        Console.WriteLine("What would you like to do?");
-        Console.WriteLine();
-        Console.WriteLine("1: Add a product");
-        Console.WriteLine("2: Update a product");
-        Console.WriteLine("3: Remove a product");
-        Console.WriteLine("4: List all products");
-        Console.WriteLine("5: Count of products");
-        Console.WriteLine("6: Value of inventory");
-        Console.WriteLine();
-        Console.Write("Key: ");
+        PromptPlus.WriteLine("Welcome to the Inventory Management System");
+        PromptPlus.WriteLine();
+        PromptPlus.WriteLine("What would you like to do?");
+        PromptPlus.WriteLine();
+        PromptPlus.WriteLine("1: Add a product");
+        PromptPlus.WriteLine("2: Update a product");
+        PromptPlus.WriteLine("3: Remove a product");
+        PromptPlus.WriteLine("4: List all products");
+        PromptPlus.WriteLine("5: Count of products");
+        PromptPlus.WriteLine("6: Value of inventory");
+        PromptPlus.WriteLine();
+        PromptPlus.Write("Key: ");
 
         var possibleMainMenuKeys = _mainMenuActions.Select(a => a.Key).ToList();
         if (!TryWaitForKeyInput(out var validKeyFromUser, possibleMainMenuKeys))
@@ -75,8 +77,8 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
             return;
         }
 
-        Console.WriteLine();
-        Console.WriteLine();
+        PromptPlus.WriteLine();
+        PromptPlus.WriteLine();
 
         var console = action();
 
