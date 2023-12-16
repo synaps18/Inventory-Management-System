@@ -1,6 +1,6 @@
 ﻿using DryIoc;
-using InventoryManagementSystem.Extensions;
-using InventoryManagementSystem.Interfaces;
+using InventoryManagementSystem.Core.Extensions;
+using InventoryManagementSystem.Core.Interfaces;
 using InventoryManagementSystem.Services;
 using InventoryManagementSystem.Ui;
 
@@ -56,15 +56,14 @@ internal class InventoryManagementSystem
     /// <summary>
     /// Entry Point
     /// </summary>
-    /// <param name="args"></param>
     /// <returns></returns>
-    private static async Task Main(string[] args)
+    private static async Task Main()
     {
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
         ConfigureContainer();
 
-        var userInterface = Container.Resolve<IUserInterface>();
+        Container.Resolve<IUserInterface>();
 
         await KeepAlive();
     }

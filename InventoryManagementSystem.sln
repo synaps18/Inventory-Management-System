@@ -5,6 +5,12 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryManagementSystem", "InventoryManagementSystem\InventoryManagementSystem.csproj", "{8F18EAEE-E85F-420B-92F7-AB18F6038F7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementSystem.Ui", "InventoryManagementSystem.Ui\InventoryManagementSystem.Ui.csproj", "{1C831890-A4AA-4749-9BC7-35D5392E6405}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementSystem.Core", "InventoryManagementSystem.Core\InventoryManagementSystem.Core.csproj", "{F84127C1-4057-419E-8AC5-2E95AFD8049C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementSystem.Services", "InventoryManagementSystem.Services\InventoryManagementSystem.Services.csproj", "{C656E351-FB23-4591-8637-F79F747D68C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{8F18EAEE-E85F-420B-92F7-AB18F6038F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F18EAEE-E85F-420B-92F7-AB18F6038F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F18EAEE-E85F-420B-92F7-AB18F6038F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C831890-A4AA-4749-9BC7-35D5392E6405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C831890-A4AA-4749-9BC7-35D5392E6405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C831890-A4AA-4749-9BC7-35D5392E6405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C831890-A4AA-4749-9BC7-35D5392E6405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F84127C1-4057-419E-8AC5-2E95AFD8049C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F84127C1-4057-419E-8AC5-2E95AFD8049C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F84127C1-4057-419E-8AC5-2E95AFD8049C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F84127C1-4057-419E-8AC5-2E95AFD8049C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C656E351-FB23-4591-8637-F79F747D68C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C656E351-FB23-4591-8637-F79F747D68C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C656E351-FB23-4591-8637-F79F747D68C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C656E351-FB23-4591-8637-F79F747D68C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
