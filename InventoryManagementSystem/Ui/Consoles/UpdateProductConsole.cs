@@ -24,12 +24,9 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
     {
         base.Load();
 
-        PromptPlus.WriteLine("Ok, let's update a product!");
-        PromptPlus.WriteLine("Here's a list of products, have an eye on the ID number");
+        PrintAllProducts();
+
         PromptPlus.WriteLine();
-
-        _inventoryManagementService.Products.ForEach(p => PromptPlus.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
-
         PromptPlus.WriteLine();
 
         if (!AskForProductToUpdate(out var productId))
@@ -61,6 +58,17 @@ public class UpdateProductConsole : ConsoleBase, IUpdateProductConsole
         }
 
         ReturnToMainMenu();
+    }
+
+    private void PrintAllProducts()
+    {
+        PromptPlus.WriteLine("Ok, let's update a product!");
+
+        PromptPlus.Table<Product>("Here's a list of products, have an eye on the ID number")
+            .AddItems(_inventoryManagementService.Products)
+            .AutoFill(30, 80)
+            .AddFormatType<float>(a => ((float)a).ToString(("N2")) + " €")
+            .Run();
     }
 
     /// <summary>

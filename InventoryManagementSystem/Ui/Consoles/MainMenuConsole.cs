@@ -1,15 +1,16 @@
-﻿using System.Diagnostics.Tracing;
-using InventoryManagementSystem.Extensions;
-using InventoryManagementSystem.Ui.Interfaces;
+﻿ using InventoryManagementSystem.Extensions;
+ using InventoryManagementSystem.Ui.Extensions;
+ using InventoryManagementSystem.Ui.Interfaces;
+using InventoryManagementSystem.Ui.Models;
 using PPlus;
-using IConsoleBase = InventoryManagementSystem.Ui.Interfaces.IConsoleBase;
+ using PPlus.Controls;
 
-namespace InventoryManagementSystem.Ui.Consoles;
+ namespace InventoryManagementSystem.Ui.Consoles;
 
 /// <inheritdoc cref="IMainMenuConsole"/>
 public class MainMenuConsole : ConsoleBase, IMainMenuConsole
 {
-    private readonly Dictionary<ConsoleKey, Func<IConsoleBase>> _mainMenuActions = new();
+    private readonly List<ConsoleMenuItem> _consoleMenuItems = new();
 
     public MainMenuConsole(
         IConsoleFactory consoleFactory
@@ -23,66 +24,49 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
     /// </summary>
     private void InitializeMainMenu()
     {
-        _mainMenuActions.Clear();
+        _consoleMenuItems.Clear();
 
-        _mainMenuActions.Add(ConsoleKey.D1, ConsoleFactory.GetConsole<IAddProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad1, ConsoleFactory.GetConsole<IAddProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.D2, ConsoleFactory.GetConsole<IUpdateProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad2, ConsoleFactory.GetConsole<IUpdateProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.D3, ConsoleFactory.GetConsole<IRemoveProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad3, ConsoleFactory.GetConsole<IRemoveProductConsole>);
-        _mainMenuActions.Add(ConsoleKey.D4, ConsoleFactory.GetConsole<IListAllProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad4, ConsoleFactory.GetConsole<IListAllProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.D5, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad5, ConsoleFactory.GetConsole<ICountOfProductsConsole>);
-        _mainMenuActions.Add(ConsoleKey.D6, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
-        _mainMenuActions.Add(ConsoleKey.NumPad6, ConsoleFactory.GetConsole<IValueOfInventoryConsole>);
-    }
-
-    /// <summary>
-    /// Printout the maine menu and asks user for next action
-    /// </summary>
-    private void MainMenu()
-    {
-        PromptPlus.WriteLine("Welcome to the Inventory Management System");
-        PromptPlus.WriteLine();
-        PromptPlus.WriteLine("What would you like to do?");
-        PromptPlus.WriteLine();
-        PromptPlus.WriteLine("1: Add a product");
-        PromptPlus.WriteLine("2: Update a product");
-        PromptPlus.WriteLine("3: Remove a product");
-        PromptPlus.WriteLine("4: List all products");
-        PromptPlus.WriteLine("5: Count of products");
-        PromptPlus.WriteLine("6: Value of inventory");
-        PromptPlus.WriteLine();
-        PromptPlus.Write("Key: ");
-
-        var possibleMainMenuKeys = _mainMenuActions.Select(a => a.Key).ToList();
-        if (!TryWaitForKeyInput(out var validKeyFromUser, possibleMainMenuKeys))
+        _consoleMenuItems.Add(new ConsoleMenuItem()
         {
-            this.Warn("User entered invalid number for main menu");
+            ValidConsoleKeys = new[] { ConsoleKey.D1 , ConsoleKey.NumPad1 },
+            Function = ConsoleFactory.GetConsole<IAddProductConsole>,
+            Description = "1: Add a product"
+        });
 
-            ReturnToMainMenu();
-            return;
-        }
-
-        if (!_mainMenuActions.TryGetValue(validKeyFromUser, out var action))
+        _consoleMenuItems.Add(new ConsoleMenuItem()
         {
-            this.Error($"Key [{validKeyFromUser}] not found!");
-        }
+            ValidConsoleKeys = new[] { ConsoleKey.D2, ConsoleKey.NumPad2 },
+            Function = ConsoleFactory.GetConsole<IUpdateProductConsole>,
+            Description = "2: Update a product"
+        });
 
-        if (action == null)
+        _consoleMenuItems.Add(new ConsoleMenuItem()
         {
-            this.Error($"Action for key [{validKeyFromUser}] is null!");
-            return;
-        }
+            ValidConsoleKeys = new[] { ConsoleKey.D3, ConsoleKey.NumPad3 },
+            Function = ConsoleFactory.GetConsole<IRemoveProductConsole>,
+            Description = "3: Remove a product"
+        });
 
-        PromptPlus.WriteLine();
-        PromptPlus.WriteLine();
+        _consoleMenuItems.Add(new ConsoleMenuItem()
+        {
+            ValidConsoleKeys = new[] { ConsoleKey.D4, ConsoleKey.NumPad4 },
+            Function = ConsoleFactory.GetConsole<IListAllProductsConsole>,
+            Description = "4: List all products"
+        });
 
-        var console = action();
+        _consoleMenuItems.Add(new ConsoleMenuItem()
+        {
+            ValidConsoleKeys = new[] { ConsoleKey.D5, ConsoleKey.NumPad5 },
+            Function = ConsoleFactory.GetConsole<ICountOfProductsConsole>,
+            Description = "5: Count of all products"
+        });
 
-        console.Load();
+        _consoleMenuItems.Add(new ConsoleMenuItem()
+        {
+            ValidConsoleKeys = new[] { ConsoleKey.D6, ConsoleKey.NumPad6 },
+            Function = ConsoleFactory.GetConsole<IValueOfInventoryConsole>,
+            Description = "6: Value of all products"
+        });
     }
 
     /// <inheritdoc />
@@ -90,6 +74,47 @@ public class MainMenuConsole : ConsoleBase, IMainMenuConsole
     {
         base.Load();
 
-        MainMenu();
+        PrintMainMenu();
+        WaitForKeyAndLoadConsole();
+    }
+
+    /// <summary>
+    /// Printout the maine menu
+    /// </summary>
+    private void PrintMainMenu()
+    {
+        PromptPlus.Banner("ITWH - Sample").Run(bannerDash: BannerDashOptions.DoubleBorderDown);
+        PromptPlus.WriteLine("Welcome to the Inventory Management System");
+        PromptPlus.WriteLine();
+        PromptPlus.WriteLine("What would you like to do?");
+        PromptPlus.WriteLine();
+
+        _consoleMenuItems.ForEach(item => PromptPlus.WriteLine(item.Description));
+    }
+
+    /// <summary>
+    /// Waits for user to enter the key and loads the related console
+    /// </summary>
+    private void WaitForKeyAndLoadConsole()
+    {
+        PromptPlus.WriteLine();
+
+        if (!_consoleMenuItems.AskUserForKey(out var validKeyFromUser))
+        {
+            this.Info("Key input for main menu failed or aborted");
+            ReturnToMainMenu();
+            return;
+        };
+
+        var menuItem = _consoleMenuItems.Find(item => item.ValidConsoleKeys.Any(key => key == validKeyFromUser));
+        if (menuItem == null)
+        {
+            this.Error($"Action for key [{validKeyFromUser}] is null!");
+            ReturnToMainMenu();
+            return;
+        }
+
+        var nextConsole = menuItem.Function();
+        nextConsole.Load();
     }
 }

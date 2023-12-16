@@ -55,35 +55,6 @@ public abstract class ConsoleBase : IConsoleBase
     }
 
     /// <summary>
-    /// Gets text input of the user
-    /// </summary>
-    /// <param name="message"> Request message for user </param>
-    /// <param name="errorMessage"> Error message if no retries left </param>
-    /// <param name="retry"> Times to retry the request </param>
-    /// <returns> Given user input </returns>
-    protected string GetUserInput(string message, string errorMessage, int retry = 2)
-    {
-        PromptPlus.WriteLine(message);
-        var userInput = PromptPlus.ReadLine();
-
-        while (string.IsNullOrEmpty(userInput))
-        {
-            PromptPlus.WriteLine(errorMessage);
-
-            if (retry <= 1)
-            {
-                return string.Empty;
-            }
-
-            userInput = PromptPlus.ReadLine();
-
-            retry--;
-        }
-
-        return userInput;
-    }
-
-    /// <summary>
     /// Returns to the main menu
     /// </summary>
     protected void ReturnToMainMenu()
@@ -92,38 +63,5 @@ public abstract class ConsoleBase : IConsoleBase
         PromptPlus.ReadKey();
 
         ConsoleFactory.GetConsole<IMainMenuConsole>().Load();
-    }
-
-    /// <summary>
-    /// Gets yes or no (y / n) from user and validates it
-    /// </summary>
-    /// <returns> Yes: <b>true</b> No or invalid: <b>false</b></returns>
-    protected bool UserInputYesOrNo()
-    {
-        if (!TryWaitForKeyInput(out var enteredKey, new List<ConsoleKey>()
-            {
-                ConsoleKey.Y,
-                ConsoleKey.N
-            }))
-        {
-            PromptPlus.WriteLine("Tried too many times... Leaving");
-            return false;
-        }
-
-        ;
-
-        if (enteredKey == ConsoleKey.N)
-        {
-            PromptPlus.WriteLine("Ok!");
-            return false;
-        }
-
-        if (enteredKey != ConsoleKey.Y)
-        {
-            PromptPlus.WriteLine("Entered invalid key. Leaving...");
-            return false;
-        }
-
-        return true;
     }
 }

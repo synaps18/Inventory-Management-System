@@ -51,7 +51,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
     /// </summary>
     /// <param name="name"> Entered name </param>
     /// <returns> User input was successfull or not </returns>
-    private bool AskForName(out string name)
+    private static bool AskForName(out string name)
     {
         //Ask for Name
         var productNameText = PromptPlus.Input("Choose a name")
@@ -74,7 +74,7 @@ public class AddProductConsole : ConsoleBase, IAddProductConsole
     /// </summary>
     /// <param name="prize"> The entered price </param>
     /// <returns> User input was successfull or not </returns>
-    private bool AskForPrice(out float prize)
+    private static bool AskForPrice(out float prize)
     {
         //Ask for Price
         var productPrizeText = PromptPlus.Input("How much is the fish?")

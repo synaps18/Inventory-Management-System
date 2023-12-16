@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Interfaces;
+using InventoryManagementSystem.Models;
 using InventoryManagementSystem.Ui.Interfaces;
 using PPlus;
 using PPlus.Controls;
@@ -23,12 +24,9 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
     {
         base.Load();
 
-        PromptPlus.WriteLine("Ok, let's remove a product!");
-        PromptPlus.WriteLine("Here's a list of products, have an eye on the ID number");
+        PrintAllProducts();
+
         PromptPlus.WriteLine();
-
-        _inventoryManagementService.Products.ForEach(p => PromptPlus.WriteLine($"Id: {p.Id} \t Name: {p.Name} \t Price: {p.Price.ToString("N2")} €"));
-
         PromptPlus.WriteLine();
 
         var productIdText = PromptPlus.Input("Which product should be removed?")
@@ -36,7 +34,12 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
             .AddValidators(PromptValidators.IsNumber())
             .Run();
 
-        var productId = Convert.ToInt32(productIdText);
+        if (productIdText.IsAborted)
+        {
+            Restart();
+            return;
+        }
+        var productId = Convert.ToInt32(productIdText.Value);
 
         if (!_inventoryManagementService.TryGetProduct(productId, out var product))
         {
@@ -71,9 +74,20 @@ public class RemoveProductConsole : ConsoleBase, IRemoveProductConsole
 
         ;
 
-        PromptPlus.WriteLine($"Successfully removed product with id [{productId}]");
+        PromptPlus.WriteLine($"Successfully removed product with id {productId}");
 
         ReturnToMainMenu();
+    }
+
+    private void PrintAllProducts()
+    {
+        PromptPlus.WriteLine("Ok, let's remove a product!");
+
+        PromptPlus.Table<Product>("Here's a list of products, have an eye on the ID number")
+            .AddItems(_inventoryManagementService.Products)
+            .AutoFill(30, 80)
+            .AddFormatType<float>(a => ((float)a).ToString(("N2")) + " €")
+            .Run();
     }
 
     /// <summary>
